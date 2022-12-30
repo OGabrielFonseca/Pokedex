@@ -3,14 +3,3 @@
     box-sizing: border-box;
 }
 
-body {
-    background-color: #c4cad6;
-}
-
-.content{
-    padding: 1rem;
-    width: 100vw;
-    height: 100vh;
-    padding: 1rem;
-    background-color: #fff;
-}
