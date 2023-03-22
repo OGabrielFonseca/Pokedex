@@ -1,8 +1,9 @@
 const pokeApi = {};
 
-function convertDetailToPokemon (pokeDetail){
+/*<--------------- Pokedex ----------------->*/
+function convertToPokemon (pokeDetail){
     const pokemon = new Pokemon();
-    pokemon.number = pokeDetail.order;
+    pokemon.number = pokeDetail.id;
     pokemon.name = pokeDetail.name;
 
     const types = pokeDetail.types.map((typeSlot) => typeSlot.type.name)
@@ -18,11 +19,11 @@ function convertDetailToPokemon (pokeDetail){
 pokeApi.getPokemonDetail = (pokemon) => {
     return fetch(pokemon.url)
             .then((response) => response.json())
-            .then(convertDetailToPokemon);
+            .then(convertToPokemon);
 }
 
-pokeApi.getPokemons = (offset = 0, limit = 10) => {
-    const url = 'https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}';
+pokeApi.getPokemons = (offset = 0, limit = 20) => {
+    const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
 
     return fetch(url)
         .then((response) => response.json())
@@ -30,4 +31,62 @@ pokeApi.getPokemons = (offset = 0, limit = 10) => {
         .then((pokemons) => pokemons.map (pokeApi.getPokemonDetail))
         .then((detailRequests) => Promise.all(detailRequests))
         .then((pokemonDetails) => pokemonDetails);
+}
+
+/*<--------------- Pokemon Deitail ----------------->*/
+
+function convertToPokemonDetail (pokeDetail){
+    
+    const pokemonDetail = new PokemonDetail();
+    const abilities = pokeDetail.abilities.map((abilitySlot) => abilitySlot.ability.name)
+    pokemonDetail.abilities = abilities;
+    pokemonDetail.number = pokeDetail.id;
+    pokemonDetail.name = pokeDetail.name;
+
+    const types = pokeDetail.types.map((typeSlot) => typeSlot.type.name)
+    const [type] = types;
+    pokemonDetail.types = types;
+    pokemonDetail.type = type;
+
+    pokemonDetail.image = pokeDetail.sprites.other.dream_world.front_default;
+
+    const stats = pokeDetail.stats.map((statSlot) => [statSlot.stat.name, statSlot.base_stat]);
+    pokemonDetail.stats = stats;
+
+    pokemonDetail.height = pokeDetail.height;
+    pokemonDetail.weight = pokeDetail.weight;
+    pokemonDetail.baseExperience = pokeDetail.base_experience;
+
+    pokemonDetail.moves = pokeDetail.moves.map((moveSlot) => moveSlot.move.url);
+    pokemonDetail.species = pokeDetail.species.url;
+    console.log(pokemonDetail.species);
+    
+    return pokemonDetail;
+}
+
+pokeApi.getMove = (move) => {
+    return fetch(move)
+            .then((response) => response.json())
+            .then((pokemonMove) => [pokemonMove.id, pokemonMove.name, pokemonMove.type.name]);
+}
+
+pokeApi.getEvolutions = (evolutionChain) => {
+    evolutionChain = evolutionChain.chain;
+        var evolutions = [];
+        evolutions.push([evolutionChain.species.name, evolutionChain.species.url.replace('-species', '')]);
+        console.log(evolutions);
+        console.log(evolutionChain.evolves_to);
+        while(evolutionChain.evolves_to[0] != undefined){
+            evolutionChain = evolutionChain.evolves_to[0];
+            evolutions.push({"name": evolutionChain.species.name, "url": evolutionChain.species.url.replace('-species', ''), "image": ""});     
+        }
+        return evolutions;
+}
+
+pokeApi.getPokemon = (pokemon) => {
+    const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
+    return fetch(url)
+            .then((response) => response.json())
+            .then(convertToPokemonDetail)
+            .then((pokemonDetails) =>pokemonDetails)          
 }

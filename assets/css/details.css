@@ -1,0 +1,226 @@
+
+.body{
+    padding:3rem;
+}
+.container{
+    border-radius: 50px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header{
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.header__buttons{
+    display: flex;
+    justify-content: space-between;
+}
+
+.like-btn, .back-btn{
+    width: 30px;
+    height: 30px;
+}
+
+.header__pokemon--name{
+    font-family: 'Catamaran', sans-serif;
+    color: white;
+    font-weight: 700;
+    letter-spacing: .05rem;
+    font-size: 2rem;
+    text-transform: capitalize;
+}
+
+.header__pokemon{
+    margin: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header__pokemon--types{
+    margin-top: .5rem;
+    display: flex;
+    flex-direction: row;
+    gap: .2rem;
+ }
+
+.header__pokemon--type{
+    text-align: center;
+    color:white;
+    padding: .5rem;
+    margin: .2rem 0;
+    border-radius: 2rem;
+    font-size: .8rem;
+    filter: brightness(1.1);
+    text-transform: capitalize;
+}
+
+.header__pokemon--number{
+    color: white;
+    letter-spacing: .1rem;
+    align-self: center;
+}
+
+
+.pokemon__img{
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto;
+    transform: translate(0, 100px);
+}
+
+.details{
+    padding: 5rem 2rem;
+    padding-top: 5rem;
+    background-color: whitesmoke;
+    border-radius: inherit;
+    display: grid;
+    place-items: center;
+}
+
+.details__slider{
+    box-sizing: border-box;
+    width: 100%;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+}
+
+.details__slide{
+    padding-top: 1rem;;
+    width: 100%;
+    position: absolute;
+    transition: all 0.5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    
+}
+
+.details__btn {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    border: none;
+    border-radius: 50%;
+    z-index: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    font-size: 18px;
+  }
+  
+.details__:active {
+    transform: scale(1.1);
+}
+
+.btn-prev {
+    top: 45%;
+    left: 0px;
+}
+
+.btn-next {
+    top: 45%;
+    right: 0px;
+}
+
+.details__title, .details__subtitle{
+   text-decoration: none;
+   text-align: center;
+   margin-bottom: 1rem;
+   font-weight: 700;
+   font-size: 1.2rem;
+}
+
+.details__subtitle{
+    margin: 2rem 0;
+}
+
+.information__list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.information__item{
+    display: flex;
+    gap: 1rem;
+}
+
+
+.information__title, .status-name{
+    text-align: left;
+    min-width: 120px;
+    color: rgba(0, 0, 0, .6);
+    font-weight: 500; 
+    text-transform: capitalize;  
+}
+
+.information__detail, .status-value{
+    color: rgba(0, 0, 0, .8);
+    font-weight: 800;   
+    text-transform: capitalize;
+}
+
+.details__stat {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap:15px;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10vw;
+
+}
+
+.base-status{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;  
+}
+
+.status-bar {
+    position: relative;
+    display: inline-block;
+    width: 70%;
+    height: 10px;
+    background: #f1f1f1;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.status-bar:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: var(--bar-width, 50%);
+    background: var(--background, green);
+    height: 100%;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+}
+
+.details__moves{
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: 0 3rem;
+    align-items: center;
+    justify-content: center;
+    max-height: 400px;
+    overflow: scroll;
+}
+
+.details__move{
+    text-transform: capitalize;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: .5rem;
+    border-radius: 2rem;
+}
