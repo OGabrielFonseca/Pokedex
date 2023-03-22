@@ -12,5 +12,4 @@ class PokemonDetail {
     weight;
     moves = [];
     evolutionChain;
-
 }

@@ -6,35 +6,34 @@ var myMoves = [];
 var totalStats = 0;
 
 const getColor = (width) => {
-  if(width < 25){
+  if (width < 25) {
     return "red";
   }
-  else if(width < 50){
+  else if (width < 50) {
     return "orange";
   }
-  else if(width < 75){
+  else if (width < 75) {
     return "lightgreen";
   }
   else
-    return "green"; 
+    return "green";
 }
-
 
 const getTotalColor = (width) => {
-  if(width < 150){
+  if (width < 150) {
     return "red";
   }
-  else if(width < 300){
+  else if (width < 300) {
     return "orange";
   }
-  else if(width < 450){
+  else if (width < 450) {
     return "lightgreen";
   }
   else
-    return "green"; 
+    return "green";
 }
 
-const slider = () =>{
+const slider = () => {
   const slides = document.querySelectorAll(".details__slide");
 
   // loop through slides and set each slides translateX property to index * 100% 
@@ -59,7 +58,7 @@ const slider = () =>{
       curSlide++;
     }
 
-  //   move slide by -100%
+    //   move slide by -100%
     slides.forEach((slide, indx) => {
       slide.style.transform = `translateX(${100 * (indx - curSlide)}%)`;
     });
@@ -84,16 +83,17 @@ const slider = () =>{
   });
 }
 
+async function loadDetails() {
 
-function loadDetails(){
-  pokeApi.getPokemon(myParam).then((pokemonDetail) => {
-    console.log(pokemonDetail);
-    pokemonDetail.stats.forEach((stat) => {
-      totalStats += stat[1];
-    })
+  const pokemonDetail = await pokeApi.getPokemon(myParam)
+    .then((pokemonDetail) => {
+      pokemonDetail.stats.forEach((stat) => {
+        totalStats += stat[1];
+      })
+      return pokemonDetail;
+    });
 
-    
-    const newDetail = `
+  const newDetail = `
     <div class = "container ${pokemonDetail.type}">
         <header class = "header">
             <div class = "header__buttons" >
@@ -108,7 +108,7 @@ function loadDetails(){
                 <div>
                     <h2 class="header__pokemon--name">${pokemonDetail.name}</h2>
                     <ol class="header__pokemon--types">
-                        ${pokemonDetail.types.map ((type) => `<li class="header__pokemon--type ${pokemonDetail.types[0]}">${type}</li>`).join(" ")}   
+                        ${pokemonDetail.types.map((type) => `<li class="header__pokemon--type ${pokemonDetail.types[0]}">${type}</li>`).join(" ")}   
                     </ol>
                 </div>
                 <div class="header__pokemon--number">
@@ -154,7 +154,7 @@ function loadDetails(){
                                 Abiliites
                             </span>
                             <span class="information__detail">
-                              ${pokemonDetail.abilities.map ((ability) => `${ability}`).join(", ")} 
+                              ${pokemonDetail.abilities.map((ability) => `${ability}`).join(", ")} 
                             </span>
                         </li>
                     </ol>
@@ -193,7 +193,7 @@ function loadDetails(){
                     <p class="details__title">
                         Base Status
                     </p>
-                    ${pokemonDetail.stats.map ((stat) => `
+                    ${pokemonDetail.stats.map((stat) => `
                       <div class="details__stat">
                         <p class="status-name">${stat[0]}</p>
                         <p class="status-value">${stat[1]}</p>
@@ -202,15 +202,17 @@ function loadDetails(){
                       <div class="details__stat">
                         <p class="status-name">Total</p>
                         <p class="status-value">${totalStats}</p>
-                      <div class="status-bar" style="--background: ${getColor((totalStats/6))}; --bar-width:${(totalStats/6).toString()}%"></div>
+                      <div class="status-bar" style="--background: ${getColor((totalStats / 6))}; --bar-width:${(totalStats / 6).toString()}%"></div>
                     </div>
                 </div>
                 <!-- slide 3 -->
                 <div class="details__slide">
                     <p class="details__title">
-                        Evolution
+                        Evolution Chain
                     </p>
-                    
+                    <div id = "details__evolutions" class="details__evolutions">
+                      
+                    </div> 
                 </div>
                 <!-- slide 4 -->
                 <div class="details__slide">
@@ -231,43 +233,47 @@ function loadDetails(){
         </section>   
     </div> `
 
-    body.innerHTML += newDetail;
-    slider();
-    const pageTitle = pokemonDetail.name.charAt(0).toUpperCase() + pokemonDetail.name.slice(1);
-    document.title = pageTitle;
-    return pokemonDetail;
-  })
-  .then((pokemonDetail) => {
-    fetch(pokemonDetail.species)
+  body.innerHTML += newDetail;
+  slider();
+  const pageTitle = pokemonDetail.name.charAt(0).toUpperCase() + pokemonDetail.name.slice(1);
+  document.title = pageTitle;
+
+
+  const pokemonMoves = await Promise.all(pokemonDetail.moves.map(pokeApi.getMove));
+  const movesHtml = pokemonMoves.map(move =>
+    `<div class= "details__move ${move[2]}">
+          ${move[1]}
+        </div> `
+  ).join(" ");
+
+  const details__moves = document.getElementById('details__moves');
+  details__moves.innerHTML += movesHtml;
+
+  let evolutions = await fetch(pokemonDetail.species)
     .then((response) => response.json())
     .then((response) => fetch(response.evolution_chain.url)
-    .then((evolutionChain) => evolutionChain.json())
-    .then((pokeApi.getEvolutions)))
-    return pokemonDetail;
-    }
-  )
-  .then((pokemonDetail) => pokemonDetail.moves.map(pokeApi.getMove))
-  .then(pokemonDetail => Promise.all(pokemonDetail))
-  .then((pokemonMoves) => {
-    console.log(pokemonMoves.length);
-    const moves = pokemonMoves.map(move =>
+      .then((evolutionChain) => evolutionChain.json())
+      .then((pokeApi.getEvolutions)))
 
-      `<div class= "details__move ${move[2]}">
-          ${move[1]}
-       </div> `
-    ).join(" ");
+  console.log(evolutions);
 
-    const details__moves = document.getElementById('details__moves');
-    details__moves.innerHTML += moves;
+  const evolutionsHtml = evolutions.map((evolution) =>
+    `<div class="details__evolution}">
+    <div class="details__evolution__name">
+    <a href="${evolution.url}"> ${evolution.name}</a> 
+    </div>
+    <img class= "pokemon-card__img" 
+            src="${evolution.image}"
+            alt="${evolution.name}" srcset="">
+  </div>`
+  ).join(" ");
 
-  })
-  
-  
+  const details__evolutions = document.getElementById('details__evolutions');
+  details__evolutions.innerHTML += evolutionsHtml;
+
 }
 
-
-
 loadDetails();
-/* <-------------- Slider ----------------------------> */
+
 
 
