@@ -1,6 +1,4 @@
 class PokemonDetail {
-    genderRate = [];
-    species;
     abilities = [];
     number;
     types = [];
@@ -11,5 +9,4 @@ class PokemonDetail {
     height;
     weight;
     moves = [];
-    evolutionChain;
 }

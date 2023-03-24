@@ -127,10 +127,10 @@ async function loadDetails() {
                     <ol class="information__list">
                         <li class="information__item">
                             <span class="information__title">
-                                Species
+                                Base Experience
                             </span>
                             <span class="information__detail">
-                              ${pokemonDetail.specie}
+                              ${pokemonDetail.baseExperience}
                             </span>
                         </li>
                         <li class="information__item">
@@ -158,35 +158,6 @@ async function loadDetails() {
                             </span>
                         </li>
                     </ol>
-                    <h3 class="details__subtitle">
-                        Specie
-                    </h3>
-                    <ol class="information__list">
-                        <li class="information__item">
-                            <span class="information__title">
-                                Gender
-                            </span>
-                            <span class="information__detail">
-                                Seed
-                            </span>
-                        </li>
-                        <li class="information__item">
-                            <span class="information__title">
-                                Egg Group
-                            </span>
-                            <span class="information__detail">
-                                Seed
-                            </span>
-                        </li>
-                        <li class="information__item">
-                            <span class="information__title">
-                                Egg Cycle
-                            </span>
-                            <span class="information__detail">
-                                Seed
-                            </span>
-                        </li>
-                    </ol>
                 </div>
                 <!-- slide 2 -->
                 <div class="details__slide base-status">
@@ -211,7 +182,7 @@ async function loadDetails() {
                         Evolution Chain
                     </p>
                     <div id = "details__evolutions" class="details__evolutions">
-                      
+                      <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                     </div> 
                 </div>
                 <!-- slide 4 -->
@@ -220,7 +191,7 @@ async function loadDetails() {
                         Moves
                     </p>
                     <div id = "details__moves" class="details__moves">
-                      
+                      <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                     </div>
                 </div>
                 <!-- Control buttons -->
@@ -238,7 +209,6 @@ async function loadDetails() {
   const pageTitle = pokemonDetail.name.charAt(0).toUpperCase() + pokemonDetail.name.slice(1);
   document.title = pageTitle;
 
-
   const pokemonMoves = await Promise.all(pokemonDetail.moves.map(pokeApi.getMove));
   const movesHtml = pokemonMoves.map(move =>
     `<div class= "details__move ${move[2]}">
@@ -247,7 +217,7 @@ async function loadDetails() {
   ).join(" ");
 
   const details__moves = document.getElementById('details__moves');
-  details__moves.innerHTML += movesHtml;
+  details__moves.innerHTML = movesHtml;
 
   let evolutions = await fetch(pokemonDetail.species)
     .then((response) => response.json())
@@ -258,18 +228,20 @@ async function loadDetails() {
   console.log(evolutions);
 
   const evolutionsHtml = evolutions.map((evolution) =>
-    `<div class="details__evolution}">
-    <div class="details__evolution__name">
-    <a href="${evolution.url}"> ${evolution.name}</a> 
-    </div>
-    <img class= "pokemon-card__img" 
-            src="${evolution.image}"
-            alt="${evolution.name}" srcset="">
+    `<div class="details__evolution">
+    <a href="${evolution.url}">
+      <div class="evolution__name">
+        ${evolution.name}
+      </div>
+      <img class= "evolution__img" 
+              src="${evolution.image}"
+              alt="${evolution.name}" srcset="">
+    </a> 
   </div>`
   ).join(" ");
 
   const details__evolutions = document.getElementById('details__evolutions');
-  details__evolutions.innerHTML += evolutionsHtml;
+  details__evolutions.innerHTML = evolutionsHtml;
 
 }
 
