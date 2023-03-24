@@ -76,7 +76,7 @@ pokeApi.getEvolutions = async (evolutionChain) => {
         console.log(evolutionChain);
         const pokemonName = evolutionChain.species.name;
         const pokemonImage = await pokeApi.getPokemonImage(evolutionChain.species.url.replace('-species', ''))
-        const pokemoUrl = evolutionChain.species.url.replace('https://pokeapi.co/api/v2/pokemon-species/', 'js-pokedex/details.html?pokemon=')
+        const pokemoUrl = evolutionChain.species.url.replace('https://pokeapi.co/api/v2/pokemon-species/', 'details.html?pokemon=')
         evolutionChain = evolutionChain.evolves_to[0];
         evolutions.push({
             "name": pokemonName,
